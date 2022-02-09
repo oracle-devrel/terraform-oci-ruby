@@ -1,0 +1,21 @@
+#cloud-config
+
+runcmd:
+  - dnf config-manager --set-enabled ol8_codeready_builder
+  - dnf update -y && dnf upgrade -y
+  - dnf groupinstall -y 'Development Tools'
+  - dnf install -y openssl-devel libffi-devel readline-devel gdbm-devel ncurses-devel libyaml-devel
+  - su - opc -c "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash"
+  - su - opc -c "echo 'PATH=\$HOME/.rbenv/bin:\$PATH' >> ~/.bashrc"
+  - su - opc -c "echo 'export PATH' >> ~/.bashrc"
+  - su - opc -c "echo 'eval \"\$(rbenv init - bash)\"' >> ~/.bash_profile"
+  - su - opc -c "echo 'export RUBY_CONFIGURE_OPTS=\"--disable-dtrace\"' >> ~/.bashrc"
+  # update this to whatever version of Ruby you'd like installed (this will be outdated and potentially unsafe very quickly)
+  - su - opc -c "rbenv install ${ruby_version}"
+  - su - opc -c "rbenv global ${ruby_version}"
+  - ${ install_rails == true ? "dnf install -y nodejs sqlite-devel" : "echo" }
+  - ${ install_rails == true ? "npm i -g corepack" : "echo" }
+  - ${ install_rails == true ? "su - opc -c \"bundle config set force_ruby_platform true\"" : "echo" }
+  - ${ install_rails == true ? "su - opc -c \"gem install rails\"" : "echo" }
+  # let us know things are all done
+  - su - opc -c "echo 'All done!' >> ~/cloud-init-status.txt"
