@@ -1,3 +1,27 @@
 // see https://github.com/oracle-devrel/action-release-zip-maker for docs
 [
+  {
+    "action": "create_zip",
+    "file_name": "terraform-oci-ruby-orm.zip",
+    "files": [
+      {
+        "src_pattern": "*.tf",
+        "dst_path": ".",
+        "exclude": []
+      },
+      {
+        "src": "LICENSE"
+      },
+      {
+        "src": "schema.yaml"
+      },
+      {
+        "src": "ruby.tftpl"
+      }
+    ]
+  },
+  {
+    "action": "upload_file",
+    "file_name": "terraform-oci-ruby-orm.zip"
+  }
 ]

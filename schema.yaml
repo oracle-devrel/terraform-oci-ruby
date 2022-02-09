@@ -1,0 +1,70 @@
+title: Ruby/RoR Example on Oracle Cloud
+description: The computing infrastructure sample for running Ruby/RoR on OCI.
+schemaVersion: 1.1.0
+version: 1.0
+locale: en
+variableGroups:
+  - title: "Hidden"
+    variables:
+      - ${tenancy_ocid}
+      - ${user_ocid}
+      - ${region}
+      - ${fingerprint}
+      - ${private_key_path}
+      - ${private_key_password}
+      - ${private_key}
+      - ${region}
+      - ${compartment_ocid}
+      - ${ssh_pub_key_path}
+    visible: false
+  - title: "Configuration"
+    variables:
+      - ${ad_number}
+      - ${compute_shape}
+      - ${compute_image_name}
+      - ${install_rails}
+      - ${ruby_version}
+  - title: "Credentials"
+    variables:
+      - ${ssh_pub_key}
+
+variables:
+  install_rails:
+    type: boolean
+    title: Install Ruby on Rails?
+    description: Should Ruby on Rails (aka RoR/Rails) be installed?
+    required: true
+  ad_number:
+    type: enum
+    title: Administrative Domain Number
+    description: The AD number to deploy to (1 = AD1, 2 = AD2, 3 = AD3).
+    required: true
+    enum:
+      - 1
+      - 2
+      - 3
+  ruby_version:
+    type: string
+    title: Ruby version to install
+    description: The version of Ruby to install.
+    required: true
+  ssh_pub_key:
+    title: Compute SSH Public Key
+    description: The public key to install on the compute for SSH access.
+    type: oci:core:ssh:publickey
+    required: true
+  compute_image_name:
+    title: Compute Image
+    type: oci:core:image:id
+    description: The image name to use for the compute instance.
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    required: false
+  compute_shape:
+    title: Compute Shape
+    type: oci:core:instanceshape:name
+    description: The type of Compute instance shape to use.
+    required: false
+    default: "VM.Standard.A1.Flex"
+    dependsOn:
+      compartmentId: ${compartment_ocid}
